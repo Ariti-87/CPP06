@@ -1,10 +1,9 @@
-NAME		:= bureaucrat
+NAME		:= converter
 
 #SOURCES_____________________________________________________________
 
 SRCS		:=	main.cpp			\
-				Bureaucrat.cpp		\
-				Form.cpp
+				ScalarConverter.cpp
 
 #OBJECT______________________________________________________________
 
