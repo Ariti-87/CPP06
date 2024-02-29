@@ -23,6 +23,8 @@
 *.gch
 
 # Exec
-bureaucrat
+converter
+serializer
+identify
 .nfs*
 

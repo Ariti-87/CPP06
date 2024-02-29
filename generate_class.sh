@@ -34,14 +34,14 @@ CLASS_HEADER="#ifndef ${INCLUDE_GUARD}
 
 class $CLASS_NAME
 {
-public:
-	$CLASS_NAME();
-	$CLASS_NAME($CLASS_NAME const& src);
-	~$CLASS_NAME();
-	$CLASS_NAME &operator=($CLASS_NAME const& src);
+	public:
+		$CLASS_NAME();
+		$CLASS_NAME($CLASS_NAME const& src);
+		~$CLASS_NAME();
+		$CLASS_NAME &operator=($CLASS_NAME const& src);
 
-private:
-	// Ajoutez  ici les membres de données
+	private:
+		// Ajoutez  ici les membres de données
 
 };
 

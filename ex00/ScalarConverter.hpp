@@ -47,7 +47,6 @@ private:
 	static void _displayInt(int const n);
 	static void _displayFloat(float const f);
 	static void _displayDouble(double const d);
-
 };
 
 #endif

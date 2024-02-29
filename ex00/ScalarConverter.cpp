@@ -2,26 +2,72 @@
 
 bool ScalarConverter::_isInt(std::string const input)
 {
-	std::istringstream iss(input);
-	int value;
-	iss >> value;
-	return iss.eof() && !iss.fail();
-}
+	int n = 0;
+	long ln;
 
-bool ScalarConverter::_isDouble(std::string const input)
-{
-	std::istringstream iss(input);
-	double value;
-	iss >> value;
-	return iss.eof() && !iss.fail();
+	if (input[n] == '-' || input[n] == '+')
+			n++;
+	while (input[n])
+	{
+			if (input[n] < '0' || input[n] > '9')
+					return (false);
+			n++;
+	}
+	ln = strtol(input.c_str(), NULL, 10);
+	if (!input[n] && ln < std::numeric_limits<int>::max() && ln > std::numeric_limits<int>::min())
+			return (true);
+	return (false);
 }
 
 bool ScalarConverter::_isFloat(std::string const input)
 {
-	std::istringstream iss(input);
-	float value;
-	iss >> value;
-	return iss.eof() && !iss.fail();
+	int n = 0;
+	int point = 0;
+	double f;
+
+	if (input[n] == '-' || input[n] == '+')
+		n++;
+	while (input[n] && input[n] != 'f')
+	{
+		if (input[n] < '0' || input[n] > '9')
+		{
+			if (input[n] == '.' && input[n + 1])
+				point++;
+			else
+				return (false);
+		}
+		n++;
+	}
+	if (input[n] == 'f' && !input[n + 1] && point == 1)
+	{
+		f = strtod(input.c_str(), NULL);
+		if (f > -std::numeric_limits<float>::max() && f < std::numeric_limits<float>::max())
+			return (true);
+	}
+	return (false);
+}
+
+bool ScalarConverter::_isDouble(std::string const input)
+{
+	int n = 0;
+	int point = 0;
+
+	if (input[n] == '-' || input[n] == '+')
+			n++;
+	while (input[n])
+	{
+		if (input[n] < '0' || input[n] > '9')
+		{
+			if (input[n] == '.' && input[n + 1])
+				point++;
+			else
+				return (false);
+		}
+		n++;
+	}
+	if (!input[n] && n <= 327 && point == 1)
+		return (true);
+	return (false);
 }
 
 bool ScalarConverter::_floatPseudoLiterals(std::string const input)
@@ -38,13 +84,15 @@ std::string ScalarConverter::_inputType(std::string const input)
 {
 	if (input.empty())
 		return "empty";
-	if (input.length() == 1 && input[0] >= 'A' && input[0] <= 'z')
+	if (input.length() == 1 && std::isalpha(input[0]))
 		return ("char");
-	if (_floatPseudoLiterals(input) || (!_doublePseudoLiterals(input) && input[input.size() -  1] == 'f'))
+	if (_floatPseudoLiterals(input) || (!_doublePseudoLiterals(input) && _isFloat(input)))
 		return ("float");
-	if (_doublePseudoLiterals(input) || input.find(".") != std::string::npos)
+	if (_doublePseudoLiterals(input) || _isDouble(input))
 		return ("double");
-	return ("int");
+	if (_isInt(input))
+		return ("int");
+	return ("unknown");
 }
 
 void ScalarConverter::_displayChar(char const c)
@@ -73,7 +121,7 @@ void ScalarConverter::_displayDouble(double const d)
 void ScalarConverter::_convertChar(std::string const input)
 {
 	char c;
-	c = input.at(0);
+	c = input[0];
 	_displayChar(c);
 	_displayInt(static_cast<int>(c));
 	_displayFloat(static_cast<float>(c));
@@ -84,7 +132,7 @@ void ScalarConverter::_convertInt(std::string const input)
 {
 	int n;
 	n = std::atoi(input.c_str());
-	if (n < 0 || n > 255)
+	if (n < 0 || n > 127)
 		std::cout << "char : impossible" << std::endl;
 	else
 		_displayChar(static_cast<char>(n));
@@ -130,7 +178,6 @@ void ScalarConverter::convert(std::string const input)
 	std::string type;
 
 	type = _inputType(input);
-	std::cout << type << std::endl;
 	if (type == "char")
 		_convertChar(input);
 	else if (type == "int")
@@ -142,7 +189,7 @@ void ScalarConverter::convert(std::string const input)
 	else if (type == "empty")
 		std::cout << "Empty input has no type" << std::endl;
 	else
-		std::cout << "Type is unknow" << std::endl;
+		std::cout << "Type is unknown" << std::endl;
 }
 
 ScalarConverter::ScalarConverter()
